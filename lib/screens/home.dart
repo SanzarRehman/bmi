@@ -12,6 +12,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  TextEditingController _heightController = TextEditingController();
+  TextEditingController _weightController = TextEditingController();
+  double _bmiresult = 0;
+  String _textresult = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   width: 130,
                   child: TextField(
+                    controller: _heightController,
                     style: TextStyle(
                         fontSize: 42,
                         fontWeight: FontWeight.w300,
@@ -47,13 +52,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       hintStyle: TextStyle(
                           fontSize: 40,
                           fontWeight: FontWeight.w300,
-                          color: Colors.white.withOpacity(.2)),
+                          color: Colors.white.withOpacity(.5)),
                     ),
                   ),
                 ),
                 Container(
                   width: 130,
                   child: TextField(
+                    controller: _weightController,
                     style: TextStyle(
                         fontSize: 42,
                         fontWeight: FontWeight.w300,
@@ -65,12 +71,84 @@ class _HomeScreenState extends State<HomeScreen> {
                       hintStyle: TextStyle(
                           fontSize: 40,
                           fontWeight: FontWeight.w300,
-                          color: Colors.white.withOpacity(.2)),
+                          color: Colors.white.withOpacity(.5)),
                     ),
                   ),
                 ),
               ],
-            )
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            GestureDetector(
+              onTap: () {
+                double _h = double.parse(_heightController.text);
+                double _w = double.parse(_weightController.text);
+                setState(() {
+                  _bmiresult = _w / (_h * _h);
+                  if (_bmiresult > 25)
+                    _textresult = "you are overweight";
+                  else if (_bmiresult >= 18.5 && _bmiresult <= 25)
+                    _textresult = "You Are Normal";
+                  else
+                    _textresult = "Under Weight";
+                });
+              },
+              child: Text(
+                "Calculate",
+                style: TextStyle(
+                  fontSize: 30,
+                  color: accentHexColor,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 50,
+            ),
+            Container(
+              child: Text(
+                _bmiresult.toStringAsFixed(2),
+                style: TextStyle(
+                  fontSize: 90,
+                  color: accentHexColor,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Visibility(
+                visible: _textresult.isNotEmpty,
+                child: Container(
+                  child: Text(
+                    _textresult,
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w400,
+                      color: accentHexColor,
+                    ),
+                  ),
+                )),
+            SizedBox(
+              height: 15,
+            ),
+            LeftBar(barWidth: 40),
+            SizedBox(
+              height: 20,
+            ),
+            LeftBar(barWidth: 70),
+            SizedBox(
+              height: 20,
+            ),
+            LeftBar(barWidth: 40),
+            SizedBox(
+              height: 10,
+            ),
+            RightBar(barWidth: 40),
+            SizedBox(
+              height: 20,
+            ),
+            RightBar(barWidth: 50),
           ],
         )));
   }
